@@ -15,7 +15,7 @@ import uk.co.lukestevens.models.Example;
 public class TemplateApiClient extends AbstractApiClient<Example> implements TemplateApi {
 
 	private static final String ADDRESS_PROPERTY = "template.api.address";
-	private static final String RESOURCE_URL = "/api/example/";
+	private static final String RESOURCE_URL = "/api/example";
 
 	private final Config config;
 
@@ -29,14 +29,25 @@ public class TemplateApiClient extends AbstractApiClient<Example> implements Tem
 	protected String getAddress() {
 		return this.config.getAsString(ADDRESS_PROPERTY);
 	}
-
+	
+	String url(int id) throws ApiClientException {
+		if(id == 0) {
+			throw new ApiClientException("Id must be set");
+		}
+		return this.url("/" + id);
+	}
+	
 	String url() {
-		return this.getAddress() + RESOURCE_URL;
+		return this.url("");
+	}
+	
+	String url(String toAppend) {
+		return this.getAddress() + RESOURCE_URL + toAppend;
 	}
 	
 	@Override
 	public Example getExample(int id) throws IOException {
-		Request request = new Request.Builder().url(url() + id).build();
+		Request request = new Request.Builder().url(url(id)).build();
 		return this.handleRequest(request);
 	}
 
@@ -50,13 +61,13 @@ public class TemplateApiClient extends AbstractApiClient<Example> implements Tem
 	@Override
 	public Example updateExample(Example example) throws IOException {
 		RequestBody body = createBody(example);
-		Request request = new Request.Builder().url(url() + example.getId()).put(body).build();
+		Request request = new Request.Builder().url(url(example.getId())).put(body).build();
 		return this.handleRequest(request);
 	}
 
 	@Override
 	public void deleteExample(int id) throws IOException {
-		Request request = new Request.Builder().url(url() + id).delete().build();
+		Request request = new Request.Builder().url(url(id)).delete().build();
 		this.handleRequest(request);
 	}
 
