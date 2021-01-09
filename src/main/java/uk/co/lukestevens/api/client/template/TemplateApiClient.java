@@ -1,4 +1,4 @@
-package uk.co.lukestevens.api.client;
+package uk.co.lukestevens.api.client.template;
 
 import java.io.IOException;
 import javax.inject.Inject;
@@ -9,9 +9,16 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import uk.co.lukestevens.annotations.ApplicationConfig;
+import uk.co.lukestevens.api.client.AbstractApiClient;
+import uk.co.lukestevens.api.client.ApiClientException;
+import uk.co.lukestevens.api.models.Example;
 import uk.co.lukestevens.config.Config;
-import uk.co.lukestevens.models.Example;
 
+/**
+ * The implementation for the ApiClient
+ * 
+ * @author Luke Stevens
+ */
 public class TemplateApiClient extends AbstractApiClient<Example> implements TemplateApi {
 
 	private static final String ADDRESS_PROPERTY = "template.api.address";

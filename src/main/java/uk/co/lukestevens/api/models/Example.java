@@ -1,5 +1,10 @@
-package uk.co.lukestevens.models;
+package uk.co.lukestevens.api.models;
 
+/**
+ * The model for the api client and service
+ * 
+ * @author Luke Stevens
+ */
 public class Example {
 
 	private int id;

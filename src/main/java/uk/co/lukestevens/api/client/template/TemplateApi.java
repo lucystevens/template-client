@@ -1,9 +1,14 @@
-package uk.co.lukestevens.api.client;
+package uk.co.lukestevens.api.client.template;
 
 import java.io.IOException;
 
-import uk.co.lukestevens.models.Example;
+import uk.co.lukestevens.api.models.Example;
 
+/**
+ * An interface defining the methods for the API client
+ * 
+ * @author Luke Stevens
+ */
 public interface TemplateApi {
 	
 	public Example getExample(int id) throws IOException;
