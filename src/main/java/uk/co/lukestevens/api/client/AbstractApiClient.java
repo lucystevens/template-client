@@ -2,14 +2,16 @@ package uk.co.lukestevens.api.client;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.inject.Inject;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -55,14 +57,7 @@ public abstract class AbstractApiClient<T> {
 	 */
 	public ApiStatus status() throws IOException {
 		Request request = new Request.Builder().url(getAddress() + STATUS_URL).build();
-		try (Response response = httpClient.newCall(request).execute()) {
-			if (!response.isSuccessful()) {
-				throw new ApiClientException(response.code(), response.message());
-			}
-
-			String responseBody = response.body().string();
-			return gson.fromJson(responseBody, ApiStatus.class);
-		}
+		return handleRequest(request, body -> gson.fromJson(body, ApiStatus.class));
 	}
 	
 	/**
@@ -76,23 +71,22 @@ public abstract class AbstractApiClient<T> {
 	}
 	
 	/**
-	 * Handle a constructed request by executing it, and parsing the response.
+	 * @param <X> The type of object to parse and return
+	 * Handle a constructed request by executing it, and returning the parsed response.
 	 * @param request A constructed and ready-to-execute OkHttp request
-	 * @return The parsed data object from the response, or null if no content
-	 * is returned from the server.
-	 * @throws IOException If the server fails to respond to the request,
-	 * or the response contains errors.
+	 * @param parser The function to use to parse the response
+	 * @return The response returned by the server, if successful
+	 * @throws IOException If the server fails to respond to the request.
 	 */
-	protected T handleRequest(Request request) throws IOException {
+	protected <X> X handleRequest(Request request, ResponseBodyParser<X> parser) throws IOException {
 		try (Response response = httpClient.newCall(request).execute()) {
 			if (response.code() >= 500) {
 				throw new ApiClientException(response.code(), response.message());
 			}
-
 			String responseBody = response.body().string();
 			return response.code() == HttpURLConnection.HTTP_NO_CONTENT?
 					null : 
-					parseResponse(responseBody);
+					parser.parse(responseBody);
 		}
 	}
 	
@@ -104,11 +98,39 @@ public abstract class AbstractApiClient<T> {
 	 * @throws IOException If the body cannot be parsed, or contains
 	 * errors from the server.
 	 */
-	protected T parseResponse(String body) throws IOException {
+	protected T parseResponseAsObject(String body) throws IOException {
+		JsonElement data = getDataFromResponse(body);
+		return gson.fromJson(data, clazz);
+	}
+	
+	/**
+	 * Parse a response body, retrieving the data object as a list of objects, or
+	 * throwing errors returned by the server.
+	 * @param body The response body as JSON
+	 * @return A list of parsed objects from a successful response
+	 * @throws IOException If the body cannot be parsed, or contains
+	 * errors from the server.
+	 */
+	protected List<T> parseResponseAsList(String body) throws IOException {
+		JsonElement list = getDataFromResponse(body);
+		return StreamSupport.stream(
+				list.getAsJsonArray().spliterator(), false)
+				.map(json -> gson.fromJson(json, clazz))
+				.collect(Collectors.toList());
+	}
+	
+	/**
+	 * Gets the 'data' element from the JSON server response
+	 * @param body The JSON body
+	 * @return The JsonElement for the 'data' field
+	 * @throws IOException If the body cannot be parsed, or contains
+	 * errors from the server.
+	 */
+	protected JsonElement getDataFromResponse(String body) throws IOException {
 		JsonObject json = gson.fromJson(body, JsonObject.class);
 		boolean success = json.has("success") && json.get("success").getAsBoolean();
 		if(success) {
-			return gson.fromJson(json.get("data"), clazz);
+			return json.get("data");
 		}
 		else {
 			throw new ApiClientException(

@@ -55,27 +55,27 @@ public class TemplateApiClient extends AbstractApiClient<Example> implements Tem
 	@Override
 	public Example getExample(int id) throws IOException {
 		Request request = new Request.Builder().url(url(id)).build();
-		return this.handleRequest(request);
+		return this.handleRequest(request, this::parseResponseAsObject);
 	}
 
 	@Override
 	public Example createExample(Example example) throws IOException {
 		RequestBody body = createBody(example);
 		Request request = new Request.Builder().url(url()).post(body).build();
-		return this.handleRequest(request);
+		return this.handleRequest(request, this::parseResponseAsObject);
 	}
 
 	@Override
 	public Example updateExample(Example example) throws IOException {
 		RequestBody body = createBody(example);
 		Request request = new Request.Builder().url(url(example.getId())).put(body).build();
-		return this.handleRequest(request);
+		return this.handleRequest(request, this::parseResponseAsObject);
 	}
 
 	@Override
 	public void deleteExample(int id) throws IOException {
 		Request request = new Request.Builder().url(url(id)).delete().build();
-		this.handleRequest(request);
+		this.handleRequest(request, this::parseResponseAsObject);
 	}
 
 }
