@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import uk.co.lukestevens.annotations.ApplicationConfig;
 import uk.co.lukestevens.api.client.AbstractApiClient;
 import uk.co.lukestevens.api.client.ApiClientException;
 import uk.co.lukestevens.api.models.Example;
@@ -27,7 +26,7 @@ public class TemplateApiClient extends AbstractApiClient<Example> implements Tem
 	private final Config config;
 
 	@Inject
-	public TemplateApiClient(@ApplicationConfig Config config, Gson gson, OkHttpClient httpClient) {
+	public TemplateApiClient(Config config, Gson gson, OkHttpClient httpClient) {
 		super(gson, httpClient, Example.class);
 		this.config = config;
 	}
