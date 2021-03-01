@@ -1,0 +1,12 @@
+{
+  "success":true,
+  "data":[
+	  {
+	    "id":2,
+	    "value":"some-value"
+	  }, {
+	    "id":3,
+	    "value":"another-value"
+	  }
+  ]
+}

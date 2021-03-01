@@ -1,0 +1,7 @@
+{
+  "success":false,
+  "errors":{
+    "input":"Input too long",
+    "image":"Not a png"
+  }
+}
