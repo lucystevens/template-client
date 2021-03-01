@@ -34,7 +34,7 @@ If not using server-lib, you'll also need to specify the transitive base-lib dep
 <dependency>
 	<groupId>uk.co.lukestevens</groupId>
 	<artifactId>base-lib</artifactId>
-	<version>2.1.0</version>
+	<version>1.0.0</version>
 </dependency>
 ```
 
