@@ -1,5 +1,6 @@
-[![Workflow Status][workflow-badge]][workflow-url]
-![Version][version-badge] 
+![Develop Status][workflow-badge-develop]
+![Main Status][workflow-badge-main]
+![Version][version-badge]  
 
 # template-client
 **template-client** is an template repository for creating a new client library for services
@@ -33,7 +34,7 @@ If not using server-lib, you'll also need to specify the transitive base-lib dep
 <dependency>
 	<groupId>uk.co.lukestevens</groupId>
 	<artifactId>base-lib</artifactId>
-	<version>2.0.0</version>
+	<version>2.1.0</version>
 </dependency>
 ```
 
@@ -73,8 +74,9 @@ Please make sure to update tests as appropriate.
 [MIT][mit-license]
 
 [gh-package-auth]: https://docs.github.com/en/free-pro-team@latest/packages/guides/configuring-apache-maven-for-use-with-github-packages#authenticating-to-github-packages
-[workflow-badge]: https://github.com/lukecmstevens/template-client/workflows/Maven%20Package/badge.svg?branch=develop
-[version-badge]: https://img.shields.io/badge/version-1.0.0--SNAPSHOT-red
+[workflow-badge-develop]: https://img.shields.io/github/workflow/status/lukecmstevens/template-client/publish/develop?label=develop
+[workflow-badge-main]: https://img.shields.io/github/workflow/status/lukecmstevens/template-client/release/main?label=main
+[version-badge]: https://img.shields.io/github/v/release/lukecmstevens/template-client
 [mit-license]: https://choosealicense.com/licenses/mit/
 [server-lib-repo]: https://github.com/lukecmstevens/server-lib
 [template-api-repo]: https://github.com/lukecmstevens/template-api
